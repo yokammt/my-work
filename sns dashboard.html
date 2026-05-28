@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>mt.0muu x VUELTA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--s1:#111;--s2:#1a1a1a;--b:#2a2a2a;--gold:#c8a97e;--gold2:rgba(200,169,126,.1);--blue:#7e9bc8;--blue2:rgba(126,155,200,.1);--green:#7ec8a0;--t:#e8e4de;--tm:#777;--td:#444;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{height:100%;width:100%;}
+body{background:var(--bg);color:var(--t);font-family:'Jost',sans-serif;font-weight:300;font-size:14px;width:100%;min-height:100%;overflow-x:hidden;}
+button{font-family:'Jost',sans-serif;cursor:pointer;}
+input,textarea,select{font-family:'Jost',sans-serif;}
+
+/* HEADER */
+.hdr{position:fixed;top:0;left:0;right:0;height:44px;background:var(--bg);border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;}
+.hdr-logo{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:.25em;color:var(--gold);}
+.hdr-logo span{color:var(--tm);font-size:10px;letter-spacing:.15em;margin-left:8px;font-family:'Jost',sans-serif;}
+.hdr-date{font-size:9px;letter-spacing:.1em;color:var(--td);}
+.rec-btn{font-size:8px;letter-spacing:.15em;text-transform:uppercase;padding:5px 10px;border:1px solid var(--gold);color:var(--gold);background:var(--gold2);cursor:pointer;}
+
+/* CONTENT */
+.content{padding-top:44px;padding-bottom:60px;min-height:100vh;}
+.panel{display:none;padding:12px;}
+.panel.on{display:block;}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;height:56px;background:var(--s1);border-top:1px solid var(--b);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border-top:2px solid transparent;padding:8px 0;}
+.bnav-item.on{border-top-color:var(--gold);}
+.bnav-item.on .bi,.bnav-item.on .bl{color:var(--gold);}
+.bi{font-size:16px;color:var(--td);}
+.bl{font-size:8px;letter-spacing:.08em;color:var(--td);text-transform:uppercase;}
+.rec-dot{width:10px;height:10px;background:var(--gold);border-radius:50%;}
+
+/* MORE DRAWER */
+.drawer{position:fixed;bottom:56px;left:0;right:0;background:var(--s1);border-top:1px solid var(--b);display:none;z-index:99;}
+.drawer.on{display:grid;grid-template-columns:repeat(3,1fr);}
+.dr-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:16px 8px;cursor:pointer;border-right:1px solid var(--b);}
+.dr-item:last-child{border-right:none;}
+.dr-icon{font-size:18px;}
+.dr-label{font-size:9px;letter-spacing:.08em;color:var(--tm);text-transform:uppercase;text-align:center;}
+
+/* PAGE HEADER */
+.ph{margin-bottom:10px;}
+.ph-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;letter-spacing:.07em;margin-bottom:1px;}
+.ph-sub{font-size:8px;letter-spacing:.2em;color:var(--tm);text-transform:uppercase;}
+
+/* PHASE BANNER */
+.phase{background:var(--s1);border:1px solid var(--b);border-left:3px solid var(--gold);padding:8px 12px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.phase-info{flex:1;}
+.phase-tag{font-size:7px;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;margin-bottom:2px;}
+.phase-txt{font-size:11px;color:var(--t);line-height:1.5;}
+.phase-pct{text-align:center;flex-shrink:0;}
+.phase-num{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);line-height:1;}
+.phase-lbl{font-size:7px;color:var(--td);letter-spacing:.1em;}
+
+/* STAT GRID */
+.sg{display:grid;gap:6px;margin-bottom:8px;}
+.sg2{grid-template-columns:1fr 1fr;}
+.sg4{grid-template-columns:1fr 1fr 1fr 1fr;}
+.sc{background:var(--s1);border:1px solid var(--b);padding:8px 10px;position:relative;overflow:hidden;cursor:pointer;}
+.sc::before{content:'';position:absolute;top:0;left:0;width:2px;height:100%;background:var(--gold);}
+.sc.bl::before{background:var(--blue);}
+.sc-label{font-size:7px;letter-spacing:.18em;color:var(--tm);text-transform:uppercase;margin-bottom:4px;}
+.sc-val{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--gold);line-height:1;margin-bottom:2px;}
+.sc.bl .sc-val{color:var(--blue);}
+.sc-detail{font-size:9px;color:var(--td);line-height:1.3;}
+.sc-hint{font-size:7px;color:var(--td);margin-top:3px;}
+
+/* GOAL BAR */
+.gb-wrap{margin-top:4px;}
+.gb-track{height:3px;background:var(--s2);margin-bottom:2px;}
+.gb-fill{height:100%;background:var(--blue);transition:width .8s;}
+.gb-label{font-size:8px;color:var(--td);}
+
+/* FLOW */
+.flow-wrap{background:var(--s1);border:1px solid var(--b);padding:10px 12px;margin-bottom:8px;overflow-x:auto;}
+.flow-tag{font-size:7px;letter-spacing:.25em;color:var(--tm);text-transform:uppercase;margin-bottom:10px;}
+.flow{display:flex;align-items:center;min-width:max-content;}
+.fn{background:var(--s2);border:1px solid var(--b);padding:8px 10px;text-align:center;min-width:90px;}
+.fn.on{border-color:var(--gold);background:var(--gold2);}
+.fn-icon{font-size:13px;margin-bottom:3px;}
+.fn-name{font-size:10px;color:var(--tm);letter-spacing:.06em;margin-bottom:1px;}
+.fn.on .fn-name{color:var(--gold);}
+.fn-desc{font-size:8px;color:var(--td);line-height:1.3;}
+.fa{color:var(--td);padding:0 4px;font-size:12px;flex-shrink:0;}
+
+/* SECTION DIVIDER */
+.sdiv{display:flex;align-items:center;gap:10px;margin:12px 0 8px;}
+.sdiv-label{font-size:7px;letter-spacing:.25em;color:var(--tm);text-transform:uppercase;white-space:nowrap;}
+.sdiv-line{flex:1;height:1px;background:var(--b);}
+
+/* TASK LIST */
+.tl{display:flex;flex-direction:column;gap:1px;}
+.ti{background:var(--s1);border:1px solid var(--b);padding:9px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.ti-left{}
+.ti-date{font-size:8px;color:var(--tm);margin-bottom:2px;}
+.ti-acct{font-size:7px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px;}
+.ti-acct.tk{color:var(--gold);}
+.ti-acct.vt{color:var(--blue);}
+.ti-acct.nt{color:var(--green);}
+.ti-text{font-size:12px;color:var(--t);}
+.badge{font-size:7px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border:1px solid;white-space:nowrap;flex-shrink:0;}
+.bd{color:var(--td);border-color:var(--td);}
+.br{color:var(--gold);border-color:var(--gold);}
+.bp{color:var(--green);border-color:var(--green);}
+.bg{color:var(--blue);border-color:var(--blue);}
+
+/* CARDS (general) */
+.card{background:var(--s1);border:1px solid var(--b);padding:10px 12px;margin-bottom:6px;}
+.card-tag{font-size:7px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:6px;}
+.card-tag.gold{color:var(--gold);}
+.card-tag.blue{color:var(--blue);}
+
+/* THOUGHT */
+.thought-card{background:var(--s1);border:1px solid var(--b);margin-bottom:6px;}
+.tc-header{padding:9px 12px;border-bottom:1px solid var(--b);display:flex;justify-content:space-between;align-items:center;}
+.tc-title{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--tm);}
+.tool-badge{font-size:7px;letter-spacing:.18em;padding:3px 7px;border:1px solid var(--b);color:var(--gold);text-transform:uppercase;}
+.tc-body{padding:12px;}
+textarea{width:100%;background:var(--bg);border:1px solid var(--b);color:var(--t);padding:9px 11px;font-size:14px;font-weight:300;outline:none;resize:none;border-radius:0;-webkit-appearance:none;}
+textarea:focus{border-color:var(--gold);}
+input[type=text],input[type=number],select{width:100%;background:var(--bg);border:1px solid var(--b);color:var(--t);padding:9px 11px;font-size:14px;font-weight:300;outline:none;border-radius:0;-webkit-appearance:none;}
+input[type=text]:focus,input[type=number]:focus,select:focus{border-color:var(--gold);}
+select option{background:var(--s2);}
+.field{margin-bottom:10px;}
+.field-label{font-size:7px;letter-spacing:.18em;color:var(--tm);text-transform:uppercase;margin-bottom:5px;display:block;}
+.tags-row{display:flex;gap:5px;flex-wrap:wrap;}
+.tag{font-size:8px;letter-spacing:.09em;padding:4px 8px;border:1px solid var(--b);color:var(--tm);cursor:pointer;text-transform:uppercase;user-select:none;}
+.tag.on{border-color:var(--gold);color:var(--gold);}
+.btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;}
+.btn{font-size:8px;letter-spacing:.2em;text-transform:uppercase;padding:9px 14px;border:none;cursor:pointer;}
+.btn-p{background:var(--gold);color:var(--bg);}
+.btn-g{background:transparent;color:var(--tm);border:1px solid var(--b);}
+
+/* THOUGHT ITEM */
+.thought-item{background:var(--s1);border:1px solid var(--b);padding:12px;margin-bottom:4px;}
+.thought-meta{font-size:7px;letter-spacing:.12em;color:var(--td);text-transform:uppercase;margin-bottom:6px;display:flex;gap:10px;}
+.thought-text{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;line-height:1.7;color:var(--t);margin-bottom:8px;font-style:italic;}
+.thought-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+.thought-tags{display:flex;gap:4px;flex-wrap:wrap;}
+.thought-tag{font-size:7px;letter-spacing:.09em;padding:2px 6px;border:1px solid var(--b);color:var(--td);text-transform:uppercase;}
+.convert-btn{font-size:7px;letter-spacing:.1em;padding:4px 9px;border:1px solid var(--gold);color:var(--gold);cursor:pointer;background:none;text-transform:uppercase;}
+
+/* OBSIDIAN IMPORT */
+.obs-drop{display:block;background:var(--bg);border:1px dashed var(--gold);padding:16px;text-align:center;cursor:pointer;margin-bottom:8px;}
+.obs-drop-icon{font-size:18px;margin-bottom:5px;color:var(--gold);}
+.obs-drop-text{font-size:9px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;}
+.obs-drop-sub{font-size:8px;color:var(--td);margin-top:3px;}
+.obs-status{font-size:10px;color:var(--green);margin-top:6px;display:none;}
+.obs-preview{display:none;margin-top:8px;}
+.obs-preview-item{background:var(--s2);border:1px solid var(--b);padding:9px 11px;margin-bottom:4px;display:flex;gap:8px;align-items:flex-start;}
+.obs-preview-text{flex:1;}
+.obs-preview-src{font-size:7px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:3px;}
+.obs-preview-content{font-size:13px;font-style:italic;line-height:1.5;color:var(--t);}
+.obs-add-btn{font-size:7px;padding:4px 8px;border:1px solid var(--gold);color:var(--gold);background:none;cursor:pointer;white-space:nowrap;flex-shrink:0;letter-spacing:.08em;text-transform:uppercase;}
+
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--b);border:1px solid var(--b);margin-bottom:10px;}
+.cal-hdr{background:var(--s2);padding:6px 2px;text-align:center;font-size:7px;letter-spacing:.08em;color:var(--tm);text-transform:uppercase;}
+.cal-day{background:var(--s1);padding:6px 4px;min-height:50px;cursor:pointer;}
+.cal-day.today{background:rgba(200,169,126,.07);}
+.cal-num{font-size:10px;color:var(--tm);margin-bottom:3px;}
+.cal-day.today .cal-num{color:var(--gold);}
+.dot{width:4px;height:4px;border-radius:50%;display:inline-block;margin:1px;}
+.dig{background:var(--gold);}
+.dtk{background:var(--blue);}
+.dnt{background:var(--green);}
+.legend{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--tm);}
+
+/* POSTS */
+.post-row{background:var(--s1);border:1px solid var(--b);padding:9px 12px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.post-left{}
+.post-date{font-size:8px;color:var(--tm);margin-bottom:2px;}
+.post-acct{font-size:7px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px;}
+.post-acct.tk{color:var(--gold);}
+.post-acct.vt{color:var(--blue);}
+.post-acct.nt{color:var(--green);}
+.post-text{font-size:12px;color:var(--t);}
+
+/* NOTE CARDS */
+.note-card{background:var(--s1);border:1px solid var(--b);padding:14px;margin-bottom:6px;cursor:pointer;}
+.note-type{font-size:7px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:7px;}
+.note-type.free{color:var(--td);}
+.note-type.paid{color:var(--gold);}
+.note-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;line-height:1.4;margin-bottom:6px;}
+.note-desc{font-size:10px;color:var(--tm);line-height:1.6;margin-bottom:9px;}
+.note-meta{display:flex;justify-content:space-between;align-items:center;}
+.note-price{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold);}
+.note-status{font-size:7px;letter-spacing:.12em;padding:2px 7px;border:1px solid var(--b);color:var(--td);text-transform:uppercase;}
+.note-add{border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:80px;cursor:pointer;}
+.note-add-inner{text-align:center;color:var(--td);}
+.note-add-icon{font-size:18px;margin-bottom:4px;}
+.note-add-text{font-size:8px;letter-spacing:.15em;text-transform:uppercase;}
+
+/* ANALYTICS */
+.bar-chart{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.bar-row{display:flex;align-items:center;gap:8px;}
+.bar-label{font-size:10px;color:var(--tm);width:80px;flex-shrink:0;line-height:1.3;}
+.bar-track{flex:1;height:4px;background:var(--s2);}
+.bar-fill{height:100%;background:var(--gold);transition:width .8s;}
+.bar-fill.blue{background:var(--blue);}
+.bar-fill.green{background:var(--green);}
+.bar-val{font-size:10px;color:var(--tm);width:36px;text-align:right;flex-shrink:0;}
+
+/* CHART */
+.chart-wrap{background:var(--s1);border:1px solid var(--b);padding:12px;margin-bottom:8px;}
+.chart-title{font-size:7px;letter-spacing:.22em;color:var(--tm);text-transform:uppercase;margin-bottom:10px;}
+.chart-area{height:100px;display:flex;align-items:flex-end;gap:3px;border-bottom:1px solid var(--b);}
+.chart-col{flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%;}
+.chart-bar{width:100%;background:var(--gold);min-height:2px;transition:height .8s;}
+.chart-bar.blue{background:var(--blue);}
+.chart-dates{display:flex;gap:3px;margin-top:4px;}
+.chart-date{flex:1;font-size:7px;color:var(--td);text-align:center;}
+.no-data{height:100px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--td);letter-spacing:.1em;}
+
+/* HISTORY */
+.hist-row{background:var(--s1);border:1px solid var(--b);padding:8px 10px;margin-bottom:2px;display:grid;grid-template-columns:70px repeat(4,1fr);gap:6px;align-items:center;font-size:10px;}
+.hist-row.hdr{background:var(--s2);font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:var(--tm);}
+.hist-date{font-size:9px;color:var(--tm);}
+.hist-val{text-align:right;font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--t);}
+.hist-val.gold{color:var(--gold);}
+.hist-val.blue{color:var(--blue);}
+.delta{font-size:8px;color:var(--green);}
+.delta.neg{color:#c87e7e;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.on{display:flex;}
+.modal{background:var(--s1);border:1px solid var(--b);padding:20px;width:100%;max-width:460px;max-height:85vh;overflow-y:auto;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:20px;margin-bottom:2px;}
+.modal-sub{font-size:7px;letter-spacing:.2em;color:var(--tm);text-transform:uppercase;margin-bottom:16px;}
+.modal-section{margin-bottom:14px;}
+.modal-section-label{font-size:7px;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--b);}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.modal-field{display:flex;flex-direction:column;gap:4px;}
+.modal-label{font-size:8px;letter-spacing:.12em;color:var(--tm);text-transform:uppercase;}
+.modal-btns{display:flex;gap:8px;margin-top:16px;}
+.modal-btns button{flex:1;font-size:8px;letter-spacing:.18em;text-transform:uppercase;padding:10px;cursor:pointer;border:1px solid var(--b);background:none;color:var(--tm);}
+.modal-save{background:var(--gold) !important;color:var(--bg) !important;border-color:var(--gold) !important;}
+
+/* TOAST */
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--s1);border:1px solid var(--gold);padding:8px 16px;font-size:10px;letter-spacing:.07em;color:var(--gold);opacity:0;transition:all .3s;z-index:300;white-space:nowrap;pointer-events:none;}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-logo">mt.0muu <span>x VUELTA</span></div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div class="hdr-date" id="hdrDate"></div>
+    <button class="rec-btn" onclick="openModal()">記録する</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- HOME -->
+  <div class="panel on" id="p-home">
+    <div class="ph"><div class="ph-title">Dashboard</div><div class="ph-sub">Phase 1 — 個人アカウント中心</div></div>
+
+    <div class="phase">
+      <div class="phase-info">
+        <div class="phase-tag">現在のフェーズ</div>
+        <div class="phase-txt">@mt.0muu TikTokの質を高める。VUELTAのアルゴリズムを確立する。<br><span style="color:var(--td);font-size:10px;">VUELTA 1,000視聴達成 → Phase 2へ</span></div>
+      </div>
+      <div class="phase-pct">
+        <div class="phase-num" id="phasePct">0%</div>
+        <div class="phase-lbl">VUELTA目標</div>
+      </div>
+    </div>
+
+    <div class="sg sg4">
+      <div class="sc" onclick="openModal()">
+        <div class="sc-label">@mt.0muu FF</div>
+        <div class="sc-val" id="d-tkF">26</div>
+        <div class="sc-detail">TikTok</div>
+        <div class="sc-hint">タップして記録</div>
+      </div>
+      <div class="sc" onclick="openModal()">
+        <div class="sc-label">@mt.0muu いいね</div>
+        <div class="sc-val" id="d-tkL">159</div>
+        <div class="sc-detail" id="d-tkAvg">平均 53/投稿</div>
+        <div class="sc-hint">タップして記録</div>
+      </div>
+      <div class="sc" onclick="openModal()">
+        <div class="sc-label">@mt.0muu 視聴数</div>
+        <div class="sc-val" id="d-tkV">—</div>
+        <div class="sc-detail">質で勝負</div>
+        <div class="sc-hint">タップして記録</div>
+      </div>
+      <div class="sc" onclick="openModal()">
+        <div class="sc-label">@mt.0muu 投稿数</div>
+        <div class="sc-val" id="d-tkP">3</div>
+        <div class="sc-detail">累計</div>
+        <div class="sc-hint">タップして記録</div>
+      </div>
+    </div>
+
+    <div class="sg sg4" style="margin-bottom:8px;">
+      <div class="sc bl" onclick="openModal()">
+        <div class="sc-label">VUELTA FF</div>
+        <div class="sc-val" id="d-vtF">10</div>
+        <div class="sc-detail" id="d-vtRate">TikTok</div>
+        <div class="sc-hint">タップして記録</div>
+      </div>
+      <div class="sc bl" onclick="openModal()">
+        <div class="sc-label">VUELTA いいね</div>
+        <div class="sc-val" id="d-vtL">51</div>
+        <div class="sc-detail" id="d-vtAvg">平均 2.3/投稿</div>
+        <div class="sc-hint">タップして記録</div>
+      </div>
+      <div class="sc bl" onclick="openModal()" style="grid-column:span 2;">
+        <div class="sc-label">VUELTA 視聴数(最高) — 目標 1,000</div>
+        <div style="display:flex;align-items:flex-end;gap:10px;">
+          <div class="sc-val" id="d-vtV">—</div>
+          <div style="flex:1;padding-bottom:8px;">
+            <div class="gb-track"><div class="gb-fill" id="vtBar" style="width:0%;"></div></div>
+            <div class="gb-label" id="vtLabel">0 / 1,000</div>
+          </div>
+        </div>
+        <div class="sc-hint">タップして記録</div>
+      </div>
+    </div>
+
+    <div class="flow-wrap">
+      <div class="flow-tag">3アプリ連携フロー</div>
+      <div class="flow">
+        <div class="fn on"><div class="fn-icon">◇</div><div class="fn-name">Obsidian</div><div class="fn-desc">思考・気づき<br>をメモ</div></div>
+        <div class="fa">→</div>
+        <div class="fn on"><div class="fn-icon">◻</div><div class="fn-name">Notion</div><div class="fn-desc">整理・管理<br>このダッシュ</div></div>
+        <div class="fa">→</div>
+        <div class="fn on"><div class="fn-icon">♪</div><div class="fn-name">@mt.0muu</div><div class="fn-desc">TikTok<br>質で勝負</div></div>
+        <div class="fa">→</div>
+        <div class="fn"><div class="fn-icon">♪</div><div class="fn-name">VUELTA TikTok</div><div class="fn-desc">確立中<br>1,000視聴</div></div>
+        <div class="fa">→</div>
+        <div class="fn"><div class="fn-icon">◈</div><div class="fn-name">Note</div><div class="fn-desc">抽象的思考<br>収益化</div></div>
+      </div>
+    </div>
+
+    <div class="sdiv"><div class="sdiv-label">今週のタスク</div><div class="sdiv-line"></div></div>
+    <div class="tl">
+      <div class="ti"><div class="ti-left"><div class="ti-date">今日</div><div class="ti-acct tk">TikTok — @mt.0muu</div><div class="ti-text">質にこだわった動画</div></div><div class="badge br">Ready</div></div>
+      <div class="ti"><div class="ti-left"><div class="ti-date">明日</div><div class="ti-acct vt">TikTok — VUELTA</div><div class="ti-text">広島の夜 — 空気感Vlog</div></div><div class="badge br">Ready</div></div>
+      <div class="ti"><div class="ti-left"><div class="ti-date">今月中</div><div class="ti-acct nt">Note</div><div class="ti-text">「顔のない声が、届く理由」</div></div><div class="badge bg">Goal</div></div>
+    </div>
+  </div>
+
+  <!-- THOUGHTS -->
+  <div class="panel" id="p-thoughts">
+    <div class="ph"><div class="ph-title">思考を記録する</div><div class="ph-sub">Obsidian → ダッシュボード連携</div></div>
+
+    <div class="thought-card">
+      <div class="tc-header"><div class="tc-title">Obsidianから読み込む</div><div class="tool-badge">iCloud連携</div></div>
+      <div class="tc-body">
+        <div style="font-size:10px;color:var(--tm);line-height:1.6;margin-bottom:10px;">iCloud内のObsidianファイル(.md)を選択するとメモが思考リストに追加されます</div>
+        <label class="obs-drop" for="obsFile">
+          <input type="file" id="obsFile" accept=".md,.txt" multiple style="display:none;" onchange="importObs(this)">
+          <div class="obs-drop-icon">◇</div>
+          <div class="obs-drop-text">Obsidianファイルを選択</div>
+          <div class="obs-drop-sub">.md ファイル対応 · 複数選択可</div>
+        </label>
+        <div class="obs-status" id="obsStatus"></div>
+        <div class="obs-preview" id="obsPreview">
+          <div class="sdiv" style="margin-top:8px;"><div class="sdiv-label">読み込んだメモ</div><div class="sdiv-line"></div></div>
+          <div id="obsPreviewList"></div>
+          <div class="btn-row">
+            <button class="btn btn-g" onclick="clearObs()">クリア</button>
+            <button class="btn btn-p" onclick="importAll()">全て追加</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="thought-card">
+      <div class="tc-header"><div class="tc-title">手動で記録する</div><div class="tool-badge">Obsidian</div></div>
+      <div class="tc-body">
+        <div class="field"><textarea id="thoughtText" rows="4" placeholder="言葉にならなくていい。感じたことをそのまま。"></textarea></div>
+        <div class="field">
+          <label class="field-label">タグ</label>
+          <div class="tags-row">
+            <div class="tag" onclick="toggleTag(this)">思考</div>
+            <div class="tag" onclick="toggleTag(this)">価値観</div>
+            <div class="tag" onclick="toggleTag(this)">ファッション</div>
+            <div class="tag" onclick="toggleTag(this)">夜</div>
+            <div class="tag" onclick="toggleTag(this)">広島</div>
+            <div class="tag" onclick="toggleTag(this)">経営</div>
+            <div class="tag" onclick="toggleTag(this)">日常</div>
+            <div class="tag" onclick="toggleTag(this)">問い</div>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn btn-g" onclick="saveThought()">記録する</button></div>
+      </div>
+    </div>
+
+    <div class="sdiv"><div class="sdiv-label">保存された思考</div><div class="sdiv-line"></div></div>
+    <div id="thoughtList">
+      <div class="thought-item">
+        <div class="thought-meta"><span>2週間前</span><span>VUELTA</span></div>
+        <div class="thought-text">カクテルは、きっかけに過ぎない。本当に大事なのは、その先に生まれる会話と、隣にいる人と、予定していなかったいい夜です。</div>
+        <div class="thought-footer">
+          <div class="thought-tags"><div class="thought-tag">夜</div><div class="thought-tag">言葉</div></div>
+          <button class="convert-btn" onclick="toast('投稿カレンダーに追加しました')">→ 変換</button>
+        </div>
+      </div>
+      <div class="thought-item">
+        <div class="thought-meta"><span>先週</span><span>価値観</span></div>
+        <div class="thought-text">顔を出さなくても、世界観だけで人は動く。それを証明したい。</div>
+        <div class="thought-footer">
+          <div class="thought-tags"><div class="thought-tag">価値観</div><div class="thought-tag">問い</div></div>
+          <button class="convert-btn" onclick="toast('投稿カレンダーに追加しました')">→ 変換</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="panel" id="p-calendar">
+    <div class="ph"><div class="ph-title">投稿カレンダー</div><div class="ph-sub">Notion — スケジュール管理</div></div>
+    <div class="legend">
+      <div class="legend-item"><span class="dot dig"></span>@mt.0muu</div>
+      <div class="legend-item"><span class="dot dtk"></span>VUELTA TikTok</div>
+      <div class="legend-item"><span class="dot dnt"></span>Note</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <!-- POSTS -->
+  <div class="panel" id="p-posts">
+    <div class="ph"><div class="ph-title">投稿管理</div><div class="ph-sub">Notion — 全投稿一覧</div></div>
+    <div id="postList">
+      <div class="post-row"><div class="post-left"><div class="post-date">5/20</div><div class="post-acct tk">@mt.0muu — TikTok</div><div class="post-text">個性的なファッション × 曲選択</div></div><div class="badge bp">Posted</div></div>
+      <div class="post-row"><div class="post-left"><div class="post-date">5/15</div><div class="post-acct tk">@mt.0muu — TikTok</div><div class="post-text">日常 + VUELTAメンション</div></div><div class="badge bp">Posted</div></div>
+      <div class="post-row"><div class="post-left"><div class="post-date">5/10</div><div class="post-acct vt">VUELTA — TikTok</div><div class="post-text">広島の夜 — カクテルと会話</div></div><div class="badge bp">Posted</div></div>
+      <div class="post-row"><div class="post-left"><div class="post-date">予定</div><div class="post-acct tk">@mt.0muu — TikTok</div><div class="post-text">質にこだわった世界観動画</div></div><div class="badge br">Ready</div></div>
+      <div class="post-row"><div class="post-left"><div class="post-date">予定</div><div class="post-acct vt">VUELTA — TikTok</div><div class="post-text">空気感Vlog — 次の投稿</div></div><div class="badge bd">Draft</div></div>
+    </div>
+  </div>
+
+  <!-- CREATE -->
+  <div class="panel" id="p-create">
+    <div class="ph"><div class="ph-title">新規投稿作成</div><div class="ph-sub">Notion — 設計する</div></div>
+    <div class="thought-card">
+      <div class="tc-header"><div class="tc-title">投稿の設計</div><div class="tool-badge">Notion</div></div>
+      <div class="tc-body">
+        <div class="field"><label class="field-label">アカウント</label>
+          <select>
+            <option>@mt.0muu — TikTok（質で勝負）</option>
+            <option>VUELTA — TikTok</option>
+            <option>@__tyxxiw — Instagram</option>
+            <option>VUELTA — Instagram</option>
+          </select>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+          <div class="field" style="margin:0;"><label class="field-label">投稿予定日</label><input type="text" placeholder="YYYY/MM/DD"></div>
+          <div class="field" style="margin:0;"><label class="field-label">時間</label><input type="text" placeholder="20:00"></div>
+        </div>
+        <div class="field"><label class="field-label">テーマ / 世界観</label><input type="text" placeholder="例：夕暮れの路地、静けさ"></div>
+        <div class="field"><label class="field-label">キャプション</label><textarea rows="5" placeholder="Obsidianの言葉をここに。飾らなくていい。"></textarea></div>
+        <div class="field"><label class="field-label">ハッシュタグ</label><input type="text" placeholder="#ootd #fashion #広島"></div>
+        <div class="field"><label class="field-label">カテゴリ</label>
+          <div class="tags-row">
+            <div class="tag on" onclick="toggleTag(this)">ファッション</div>
+            <div class="tag" onclick="toggleTag(this)">日常</div>
+            <div class="tag" onclick="toggleTag(this)">思考</div>
+            <div class="tag" onclick="toggleTag(this)">VUELTA</div>
+            <div class="tag" onclick="toggleTag(this)">ブランドタグ</div>
+            <div class="tag" onclick="toggleTag(this)">Vlog</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-g" onclick="toast('下書きとして保存しました')">下書き保存</button>
+          <button class="btn btn-p" onclick="toast('カレンダーにスケジュールしました')">スケジュール登録</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTE -->
+  <div class="panel" id="p-note">
+    <div class="ph"><div class="ph-title">Note 記事管理</div><div class="ph-sub">抽象的な思考のみ — 場所・仕事・具体は書かない</div></div>
+    <div class="note-card"><div class="note-type free">無料記事</div><div class="note-title">顔のない声が、届く理由</div><div class="note-desc">見せなくても伝わるものがある。姿より言葉、言葉より余白について。</div><div class="note-meta"><div class="note-price">Free</div><div class="note-status">下書き</div></div></div>
+    <div class="note-card"><div class="note-type free">無料記事</div><div class="note-title">予定していなかったいい夜について</div><div class="note-desc">計画は裏切る。偶然は正直だ。それでも夜を信じる理由。</div><div class="note-meta"><div class="note-price">Free</div><div class="note-status">アイデア</div></div></div>
+    <div class="note-card"><div class="note-type paid">有料記事</div><div class="note-title">きっかけは、本質じゃない</div><div class="note-desc">何かが始まる瞬間より、その先に何が生まれるかを私は見ている。</div><div class="note-meta"><div class="note-price">¥300</div><div class="note-status">構成中</div></div></div>
+    <div class="note-card"><div class="note-type paid">有料記事</div><div class="note-title">世界観は、語らないことで完成する</div><div class="note-desc">余白と沈黙が持つ力。説明しない美学について。</div><div class="note-meta"><div class="note-price">¥300</div><div class="note-status">アイデア</div></div></div>
+    <div class="note-card note-add" onclick="toast('新しい記事を追加しました')"><div class="note-add-inner"><div class="note-add-icon">+</div><div class="note-add-text">新しい記事</div></div></div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div class="panel" id="p-analytics">
+    <div class="ph"><div class="ph-title">数字を見る</div><div class="ph-sub">Analytics — グラフと推移</div></div>
+    <div class="chart-wrap">
+      <div class="chart-title">@mt.0muu — フォロワー推移</div>
+      <div id="chart-tkF"></div>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">@mt.0muu / VUELTA — 視聴数推移</div>
+      <div id="chart-views"></div>
+      <div class="legend" style="margin-top:6px;margin-bottom:0;">
+        <div class="legend-item"><span class="dot dig"></span>@mt.0muu</div>
+        <div class="legend-item"><span class="dot dtk"></span>VUELTA</div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">目標トラッカー</div>
+      <div class="bar-chart">
+        <div class="bar-row"><div class="bar-label">@mt.0muu 100人</div><div class="bar-track"><div class="bar-fill" id="goal1" style="width:26%;"></div></div><div class="bar-val" id="goal1v">26%</div></div>
+        <div class="bar-row"><div class="bar-label">VUELTA 1,000視聴</div><div class="bar-track"><div class="bar-fill blue" id="goal2" style="width:0%;"></div></div><div class="bar-val" id="goal2v">—</div></div>
+        <div class="bar-row"><div class="bar-label">週3投稿</div><div class="bar-track"><div class="bar-fill green" style="width:100%;"></div></div><div class="bar-val">✓</div></div>
+        <div class="bar-row"><div class="bar-label">Note 1本</div><div class="bar-track"><div class="bar-fill blue" style="width:30%;"></div></div><div class="bar-val">計画中</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="panel" id="p-history">
+    <div class="ph"><div class="ph-title">記録一覧</div><div class="ph-sub">毎日23:59に記録 → 翌0:00に反映</div></div>
+    <div id="historyList"></div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <div class="bnav-item on" id="bn-home" onclick="goPanel('home')"><div class="bi">◈</div><div class="bl">Home</div></div>
+  <div class="bnav-item" id="bn-thoughts" onclick="goPanel('thoughts')"><div class="bi">◇</div><div class="bl">思考</div></div>
+  <div class="bnav-item" id="bn-rec" onclick="openModal()"><div class="rec-dot"></div><div class="bl" style="color:var(--gold);">記録</div></div>
+  <div class="bnav-item" id="bn-analytics" onclick="goPanel('analytics')"><div class="bi">◇</div><div class="bl">数字</div></div>
+  <div class="bnav-item" id="bn-more" onclick="toggleDrawer()"><div class="bi">⋯</div><div class="bl">More</div></div>
+</nav>
+
+<!-- MORE DRAWER -->
+<div class="drawer" id="drawer">
+  <div class="dr-item" onclick="goPanel('calendar');toggleDrawer();"><div class="dr-icon">◻</div><div class="dr-label">カレンダー</div></div>
+  <div class="dr-item" onclick="goPanel('posts');toggleDrawer();"><div class="dr-icon">◻</div><div class="dr-label">投稿管理</div></div>
+  <div class="dr-item" onclick="goPanel('create');toggleDrawer();"><div class="dr-icon">＋</div><div class="dr-label">投稿作成</div></div>
+  <div class="dr-item" onclick="goPanel('note');toggleDrawer();"><div class="dr-icon">◈</div><div class="dr-label">Note</div></div>
+  <div class="dr-item" onclick="goPanel('history');toggleDrawer();"><div class="dr-icon">◇</div><div class="dr-label">記録一覧</div></div>
+</div>
+
+<!-- RECORD MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-title">本日の数字を記録</div>
+    <div class="modal-sub" id="modalDate"></div>
+    <div class="modal-section">
+      <div class="modal-section-label">@mt.0muu — TikTok</div>
+      <div class="modal-grid">
+        <div class="modal-field"><label class="modal-label">フォロワー数</label><input type="number" id="r-tkF" placeholder="例: 26"></div>
+        <div class="modal-field"><label class="modal-label">いいね累計</label><input type="number" id="r-tkL" placeholder="例: 159"></div>
+        <div class="modal-field"><label class="modal-label">最高視聴数</label><input type="number" id="r-tkV" placeholder="例: 500"></div>
+        <div class="modal-field"><label class="modal-label">投稿数（累計）</label><input type="number" id="r-tkP" placeholder="例: 3"></div>
+      </div>
+    </div>
+    <div class="modal-section">
+      <div class="modal-section-label">VUELTA — TikTok</div>
+      <div class="modal-grid">
+        <div class="modal-field"><label class="modal-label">フォロワー数</label><input type="number" id="r-vtF" placeholder="例: 10"></div>
+        <div class="modal-field"><label class="modal-label">いいね累計</label><input type="number" id="r-vtL" placeholder="例: 51"></div>
+        <div class="modal-field"><label class="modal-label">最高視聴数（目標1,000）</label><input type="number" id="r-vtV" placeholder="例: 300"></div>
+        <div class="modal-field"><label class="modal-label">総投稿数（累計）</label><input type="number" id="r-vtP" placeholder="例: 22"></div>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button onclick="closeModal()">キャンセル</button>
+      <button class="modal-save" onclick="saveRecord()">記録して保存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toastEl"></div>
+
+<script>
+var DB = {records: []};
+var KEY = 'mtuuu_v4';
+var obsParsed = [];
+
+function loadDB() {
+  try {
+    var s = localStorage.getItem(KEY);
+    if (s) DB = JSON.parse(s);
+    if (!DB.records) DB.records = [];
+  } catch(e) { DB = {records: []}; }
+}
+
+function saveDB() {
+  try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch(e) {}
+}
+
+function latest() {
+  return DB.records.length ? DB.records[DB.records.length - 1] : null;
+}
+
+function todayKey() {
+  var n = new Date();
+  var y = n.getFullYear();
+  var m = String(n.getMonth() + 1).padStart(2, '0');
+  var d = String(n.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + d;
+}
+
+function set(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function renderDash() {
+  var r = latest();
+  if (!r) return;
+  var tkF = r.tkF || 0;
+  var tkL = r.tkL || 0;
+  var tkP = r.tkP || 0;
+  var tkV = r.tkV || 0;
+  var vtF = r.vtF || 0;
+  var vtL = r.vtL || 0;
+  var vtP = r.vtP || 0;
+  var vtV = r.vtV || 0;
+
+  set('d-tkF', tkF || '—');
+  set('d-tkL', tkL || '—');
+  set('d-tkV', tkV ? tkV.toLocaleString() : '—');
+  set('d-tkP', tkP || '—');
+
+  var tkAvg = tkP > 0 ? Math.round(tkL / tkP) : 0;
+  set('d-tkAvg', tkAvg ? '平均 ' + tkAvg + '/投稿' : '');
+
+  set('d-vtF', vtF || '—');
+  set('d-vtL', vtL || '—');
+  set('d-vtV', vtV ? vtV.toLocaleString() : '—');
+
+  var vtRate = vtF > 0 ? (vtL / vtF * 100).toFixed(1) + '%' : '—';
+  set('d-vtRate', '率 ' + vtRate);
+  var vtAvg = vtP > 0 ? (vtL / vtP).toFixed(1) : 0;
+  set('d-vtAvg', vtAvg ? '平均 ' + vtAvg + '/投稿' : '');
+
+  var pct = Math.min(100, Math.round(vtV / 1000 * 100));
+  var bar = document.getElementById('vtBar');
+  if (bar) bar.style.width = pct + '%';
+  set('vtLabel', vtV.toLocaleString() + ' / 1,000');
+  set('phasePct', pct + '%');
+
+  var g1 = Math.min(100, Math.round(tkF));
+  var g1bar = document.getElementById('goal1');
+  if (g1bar) g1bar.style.width = Math.min(100, tkF) + '%';
+  set('goal1v', tkF + '%');
+  var g2bar = document.getElementById('goal2');
+  if (g2bar) g2bar.style.width = pct + '%';
+  set('goal2v', pct > 0 ? pct + '%' : '—');
+}
+
+function renderCharts() {
+  var records = DB.records.slice(-14);
+  renderSimpleChart('chart-tkF', records, 'tkF', false);
+  renderDualChart('chart-views', records);
+  renderHistory();
+}
+
+function renderSimpleChart(id, records, field, isBlue) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (!records.length) {
+    el.innerHTML = '<div class="no-data">まだ記録がありません</div>';
+    return;
+  }
+  var vals = [];
+  var i;
+  for (i = 0; i < records.length; i++) {
+    vals.push(records[i][field] || 0);
+  }
+  var mx = Math.max.apply(null, vals);
+  if (mx === 0) mx = 1;
+  var html = '<div class="chart-area">';
+  for (i = 0; i < records.length; i++) {
+    var h = Math.round((vals[i] / mx) * 100);
+    var cls = isBlue ? 'chart-bar blue' : 'chart-bar';
+    html += '<div class="chart-col"><div class="' + cls + '" style="height:' + h + '%;"></div></div>';
+  }
+  html += '</div><div class="chart-dates">';
+  for (i = 0; i < records.length; i++) {
+    var d = records[i].date ? records[i].date.slice(5).replace('-', '/') : '';
+    html += '<div class="chart-date">' + d + '</div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function renderDualChart(id, records) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (!records.length) {
+    el.innerHTML = '<div class="no-data">まだ記録がありません</div>';
+    return;
+  }
+  var allVals = [];
+  var i;
+  for (i = 0; i < records.length; i++) {
+    allVals.push(records[i].tkV || 0);
+    allVals.push(records[i].vtV || 0);
+  }
+  var mx = Math.max.apply(null, allVals);
+  if (mx === 0) mx = 1;
+  var html = '<div class="chart-area" style="gap:2px;">';
+  for (i = 0; i < records.length; i++) {
+    var hTk = Math.round(((records[i].tkV || 0) / mx) * 100);
+    var hVt = Math.round(((records[i].vtV || 0) / mx) * 100);
+    html += '<div class="chart-col" style="gap:1px;flex-direction:row;align-items:flex-end;">';
+    html += '<div style="flex:1;height:100%;display:flex;align-items:flex-end;"><div class="chart-bar" style="height:' + hTk + '%;width:100%;"></div></div>';
+    html += '<div style="flex:1;height:100%;display:flex;align-items:flex-end;"><div class="chart-bar blue" style="height:' + hVt + '%;width:100%;"></div></div>';
+    html += '</div>';
+  }
+  html += '</div><div class="chart-dates">';
+  for (i = 0; i < records.length; i++) {
+    var d = records[i].date ? records[i].date.slice(5).replace('-', '/') : '';
+    html += '<div class="chart-date">' + d + '</div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function renderHistory() {
+  var el = document.getElementById('historyList');
+  if (!el) return;
+  var records = DB.records.slice().reverse();
+  if (!records.length) {
+    el.innerHTML = '<div style="padding:20px;text-align:center;font-size:11px;color:var(--td);">まだ記録がありません</div>';
+    return;
+  }
+  var html = '<div class="hist-row hdr"><div>日付</div><div style="text-align:right;">TK FF</div><div style="text-align:right;">TK ♥</div><div style="text-align:right;">VT FF</div><div style="text-align:right;">VT 視聴</div></div>';
+  var i;
+  for (i = 0; i < records.length; i++) {
+    var r = records[i];
+    var prev = records[i + 1];
+    html += '<div class="hist-row">';
+    html += '<div class="hist-date">' + (r.date || '') + '</div>';
+    html += '<div class="hist-val gold">' + (r.tkF || '—') + deltaStr(r.tkF, prev ? prev.tkF : null) + '</div>';
+    html += '<div class="hist-val gold">' + (r.tkL || '—') + deltaStr(r.tkL, prev ? prev.tkL : null) + '</div>';
+    html += '<div class="hist-val blue">' + (r.vtF || '—') + deltaStr(r.vtF, prev ? prev.vtF : null) + '</div>';
+    html += '<div class="hist-val blue">' + (r.vtV ? r.vtV.toLocaleString() : '—') + deltaStr(r.vtV, prev ? prev.vtV : null) + '</div>';
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function deltaStr(cur, prev) {
+  if (cur == null || prev == null) return '';
+  var d = (cur || 0) - (prev || 0);
+  if (d === 0) return '';
+  var cls = d > 0 ? 'delta' : 'delta neg';
+  return ' <span class="' + cls + '">' + (d > 0 ? '+' : '') + d + '</span>';
+}
+
+// MODAL
+function openModal() {
+  var r = latest();
+  if (r) {
+    setInp('r-tkF', r.tkF); setInp('r-tkL', r.tkL);
+    setInp('r-tkV', r.tkV); setInp('r-tkP', r.tkP);
+    setInp('r-vtF', r.vtF); setInp('r-vtL', r.vtL);
+    setInp('r-vtV', r.vtV); setInp('r-vtP', r.vtP);
+  }
+  var n = new Date();
+  set('modalDate', n.getFullYear() + ' / ' + String(n.getMonth() + 1).padStart(2, '0') + ' / ' + String(n.getDate()).padStart(2, '0'));
+  document.getElementById('modal').classList.add('on');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('on');
+}
+
+function setInp(id, val) {
+  var el = document.getElementById(id);
+  if (el && val != null) el.value = val;
+}
+
+function intVal(id) {
+  var v = parseInt(document.getElementById(id).value, 10);
+  return isNaN(v) ? null : v;
+}
+
+function saveRecord() {
+  var rec = {
+    date: todayKey(),
+    tkF: intVal('r-tkF'), tkL: intVal('r-tkL'),
+    tkV: intVal('r-tkV'), tkP: intVal('r-tkP'),
+    vtF: intVal('r-vtF'), vtL: intVal('r-vtL'),
+    vtV: intVal('r-vtV'), vtP: intVal('r-vtP'),
+    savedAt: new Date().toISOString()
+  };
+  var idx = -1;
+  var i;
+  for (i = 0; i < DB.records.length; i++) {
+    if (DB.records[i].date === rec.date) { idx = i; break; }
+  }
+  if (idx >= 0) DB.records[idx] = rec;
+  else DB.records.push(rec);
+  DB.records.sort(function(a, b) { return a.date > b.date ? 1 : -1; });
+  saveDB();
+  renderDash();
+  renderCharts();
+  closeModal();
+  toast('記録しました');
+}
+
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// NAV
+function goPanel(name) {
+  var panels = document.querySelectorAll('.panel');
+  var i;
+  for (i = 0; i < panels.length; i++) panels[i].classList.remove('on');
+  var bns = document.querySelectorAll('.bnav-item');
+  for (i = 0; i < bns.length; i++) bns[i].classList.remove('on');
+  var p = document.getElementById('p-' + name);
+  if (p) p.classList.add('on');
+  var bn = document.getElementById('bn-' + name);
+  if (bn) bn.classList.add('on');
+  window.scrollTo(0, 0);
+}
+
+function toggleDrawer() {
+  document.getElementById('drawer').classList.toggle('on');
+}
+
+document.addEventListener('click', function(e) {
+  var dr = document.getElementById('drawer');
+  var btn = document.getElementById('bn-more');
+  if (dr && btn && !dr.contains(e.target) && !btn.contains(e.target)) {
+    dr.classList.remove('on');
+  }
+});
+
+// TOAST
+function toast(msg) {
+  var el = document.getElementById('toastEl');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(el._t);
+  el._t = setTimeout(function() { el.classList.remove('on'); }, 2500);
+}
+
+// TAGS
+function toggleTag(el) { el.classList.toggle('on'); }
+
+// THOUGHTS
+function saveThought() {
+  var text = document.getElementById('thoughtText').value.trim();
+  if (!text) { toast('何か書いてください'); return; }
+  addThought(text, '手動', '今');
+  document.getElementById('thoughtText').value = '';
+  toast('思考を記録しました');
+}
+
+function addThought(text, src, time) {
+  var list = document.getElementById('thoughtList');
+  var div = document.createElement('div');
+  div.className = 'thought-item';
+  var inner = '<div class="thought-meta"><span>' + (time || '今') + '</span><span>' + (src || 'Obsidian') + '</span></div>';
+  inner += '<div class="thought-text">' + text + '</div>';
+  inner += '<div class="thought-footer"><div class="thought-tags"><div class="thought-tag">新規</div></div>';
+  inner += '<button class="convert-btn" onclick="toast(\'投稿カレンダーに追加しました\')">→ 変換</button></div>';
+  div.innerHTML = inner;
+  list.insertBefore(div, list.firstChild);
+}
+
+// OBSIDIAN IMPORT
+function importObs(input) {
+  var files = Array.prototype.slice.call(input.files);
+  if (!files.length) return;
+  obsParsed = [];
+  var loaded = 0;
+  files.forEach(function(file) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var blocks = parseObs(file.name, e.target.result);
+      obsParsed = obsParsed.concat(blocks);
+      loaded++;
+      if (loaded === files.length) showObsPreview();
+    };
+    reader.readAsText(file);
+  });
+}
+
+function parseObs(filename, content) {
+  var title = filename.replace('.md', '').replace('.txt', '');
+  var lines = content.split('\n');
+  var blocks = [];
+  var current = [];
+  var i;
+  for (i = 0; i < lines.length; i++) {
+    var line = lines[i].trim();
+    if (!line) {
+      if (current.length) {
+        var text = current.join(' ').trim();
+        if (text.length > 5) blocks.push({title: title, text: text});
+        current = [];
+      }
+    } else if (line.charAt(0) === '#') {
+      if (current.length) {
+        var text2 = current.join(' ').trim();
+        if (text2.length > 5) blocks.push({title: title, text: text2});
+        current = [];
+      }
+      var heading = line.replace(/^#+/, '').trim();
+      if (heading) current.push(heading);
+    } else if (line.indexOf('tags:') !== 0 && line.indexOf('created:') !== 0) {
+      var clean = line.replace(/^[-*] ?/, '').trim();
+      clean = clean.replace('[[', '').replace(']]', '');
+      if (clean) current.push(clean);
+    }
+  }
+  if (current.length) {
+    var text3 = current.join(' ').trim();
+    if (text3.length > 5) blocks.push({title: title, text: text3});
+  }
+  return blocks;
+}
+
+function showObsPreview() {
+  var status = document.getElementById('obsStatus');
+  var preview = document.getElementById('obsPreview');
+  var list = document.getElementById('obsPreviewList');
+  status.style.display = 'block';
+  if (!obsParsed.length) {
+    status.textContent = 'テキストが見つかりませんでした';
+    return;
+  }
+  status.textContent = obsParsed.length + ' 件のメモを読み込みました';
+  preview.style.display = 'block';
+  var html = '';
+  var i;
+  for (i = 0; i < obsParsed.length; i++) {
+    var b = obsParsed[i];
+    html += '<div class="obs-preview-item">';
+    html += '<div class="obs-preview-text">';
+    html += '<div class="obs-preview-src">' + b.title + '</div>';
+    html += '<div class="obs-preview-content">' + b.text + '</div>';
+    html += '</div>';
+    html += '<button class="obs-add-btn" onclick="addSingle(' + i + ')">+ 追加</button>';
+    html += '</div>';
+  }
+  list.innerHTML = html;
+}
+
+function addSingle(i) {
+  var b = obsParsed[i];
+  if (b) { addThought(b.text, b.title, '今'); toast('思考リストに追加しました'); }
+}
+
+function importAll() {
+  var i;
+  for (i = 0; i < obsParsed.length; i++) {
+    addThought(obsParsed[i].text, obsParsed[i].title, '今');
+  }
+  toast(obsParsed.length + ' 件を追加しました');
+  clearObs();
+}
+
+function clearObs() {
+  obsParsed = [];
+  document.getElementById('obsPreview').style.display = 'none';
+  document.getElementById('obsStatus').style.display = 'none';
+  document.getElementById('obsFile').value = '';
+}
+
+// CALENDAR
+function buildCal() {
+  var g = document.getElementById('calGrid');
+  if (!g) return;
+  var days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  var i;
+  for (i = 0; i < days.length; i++) {
+    var h = document.createElement('div');
+    h.className = 'cal-hdr';
+    h.textContent = days[i];
+    g.appendChild(h);
+  }
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = now.getMonth();
+  var first = new Date(y, m, 1).getDay();
+  var dim = new Date(y, m + 1, 0).getDate();
+  var sched = {3:[{t:'ig'}],7:[{t:'tk'}],10:[{t:'ig'}],14:[{t:'ig'},{t:'tk'}],17:[{t:'nt'}],20:[{t:'ig'},{t:'tk'}],24:[{t:'ig'}],28:[{t:'nt'}]};
+  for (i = 0; i < first; i++) {
+    var e = document.createElement('div');
+    e.className = 'cal-day';
+    e.style.opacity = '.2';
+    g.appendChild(e);
+  }
+  for (var d = 1; d <= dim; d++) {
+    var cell = document.createElement('div');
+    cell.className = 'cal-day' + (d === now.getDate() ? ' today' : '');
+    var inner = '<div class="cal-num">' + d + '</div>';
+    if (sched[d]) {
+      for (var j = 0; j < sched[d].length; j++) {
+        inner += '<span class="dot d' + sched[d][j].t + '"></span>';
+      }
+    }
+    cell.innerHTML = inner;
+    (function(day) { cell.onclick = function() { toast((m + 1) + '/' + day + ' の投稿'); }; })(d);
+    g.appendChild(cell);
+  }
+}
+
+// DATE
+var now = new Date();
+set('hdrDate', now.getFullYear() + ' / ' + String(now.getMonth() + 1).padStart(2, '0') + ' / ' + String(now.getDate()).padStart(2, '0'));
+
+// AUTO 0:00
+function schedNext() {
+  var n = new Date();
+  var next = new Date(n);
+  next.setHours(24, 0, 0, 0);
+  setTimeout(function() {
+    renderDash();
+    renderCharts();
+    toast('新しい日になりました');
+    schedNext();
+  }, next - n);
+}
+
+// INIT
+loadDB();
+renderDash();
+renderCharts();
+buildCal();
+schedNext();
+</script>
+</body>
+</html>
