@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>VUELTA — Palabra</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f4f0;
+  --s1:#eceae4;
+  --s2:#e3e1da;
+  --b:#d4d1c9;
+  --gold:#a07850;
+  --gold2:rgba(160,120,80,.07);
+  --t:#2a2825;
+  --tm:#8a8680;
+  --td:#b5b2ad;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100%;width:100%;background:var(--bg);color:var(--t);font-family:'Noto Serif JP',serif;font-weight:300;}
+
+.hdr{padding:28px 20px 20px;border-bottom:1px solid var(--b);}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;}
+.hdr-logo{font-family:'Noto Serif JP',serif;font-size:26px;font-weight:300;letter-spacing:.15em;color:var(--gold);}
+.hdr-sub{font-size:8px;letter-spacing:.28em;color:var(--td);text-transform:uppercase;margin-top:3px;}
+.hdr-date{font-size:10px;letter-spacing:.08em;color:var(--td);text-align:right;line-height:1.6;}
+
+.concept{padding-left:14px;border-left:2px solid var(--gold);}
+.concept-text{font-family:'Noto Serif JP',serif;font-size:13px;font-weight:300;line-height:2;color:var(--tm);}
+.concept-text span{color:var(--t);}
+
+.main{padding:20px;}
+.field{margin-bottom:16px;}
+.field-label{font-size:7px;letter-spacing:.28em;color:var(--tm);text-transform:uppercase;margin-bottom:7px;display:block;font-family:'Noto Sans JP',sans-serif;}
+
+.title-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--b);color:var(--t);padding:8px 0;font-family:'Noto Serif JP',serif;font-size:22px;font-weight:300;letter-spacing:.04em;outline:none;transition:border-color .2s;}
+.title-input:focus{border-bottom-color:var(--gold);}
+.title-input::placeholder{color:var(--td);}
+
+.note-area{width:100%;background:transparent;border:1px solid var(--b);color:var(--t);padding:14px;font-family:'Noto Serif JP',serif;font-size:16px;font-weight:300;line-height:2;letter-spacing:.02em;outline:none;resize:none;min-height:240px;transition:border-color .2s;border-radius:0;-webkit-appearance:none;}
+.note-area:focus{border-color:var(--gold);}
+.note-area::placeholder{color:var(--td);}
+.char-count{font-size:8px;color:var(--td);letter-spacing:.1em;text-align:right;margin-top:5px;font-family:'Noto Sans JP',sans-serif;}
+
+.tags-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.auto-tag-btn{font-size:7px;letter-spacing:.15em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--gold);color:var(--gold);background:var(--gold2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .2s;display:flex;align-items:center;gap:6px;}
+.auto-tag-btn:disabled{opacity:.4;cursor:not-allowed;}
+.spin{display:inline-block;animation:spin 1s linear infinite;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+.tags-wrap{display:flex;gap:5px;flex-wrap:wrap;}
+.tag{font-size:8px;letter-spacing:.1em;padding:4px 10px;border:1px solid var(--b);color:var(--tm);cursor:pointer;text-transform:uppercase;user-select:none;transition:all .2s;font-family:'Noto Sans JP',sans-serif;}
+.tag.on{border-color:var(--gold);color:var(--gold);background:var(--gold2);}
+.tag.auto{border-color:var(--gold);color:var(--gold);background:var(--gold2);animation:tagIn .3s ease;}
+@keyframes tagIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
+
+.mood-wrap{display:flex;gap:6px;flex-wrap:wrap;}
+.mood{font-family:'Noto Serif JP',serif;font-size:13px;padding:5px 12px;border:1px solid var(--b);color:var(--tm);cursor:pointer;user-select:none;transition:all .2s;}
+.mood.on{border-color:var(--gold);color:var(--gold);background:var(--gold2);}
+
+.saved-section{padding:0 20px 100px;}
+.saved-title{font-size:7px;letter-spacing:.28em;color:var(--tm);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-family:'Noto Sans JP',sans-serif;}
+.saved-title::after{content:'';flex:1;height:1px;background:var(--b);}
+
+.saved-item{background:var(--s1);border:1px solid var(--b);padding:12px 14px;margin-bottom:5px;transition:all .2s;}
+.saved-item-meta{font-size:7px;letter-spacing:.1em;color:var(--td);text-transform:uppercase;margin-bottom:5px;display:flex;gap:10px;font-family:'Noto Sans JP',sans-serif;}
+.saved-item-title{font-family:'Noto Serif JP',serif;font-size:15px;color:var(--t);margin-bottom:3px;line-height:1.5;}
+.saved-item-preview{font-size:11px;color:var(--tm);line-height:1.6;font-family:'Noto Serif JP',serif;}
+.saved-item-tags{display:flex;gap:3px;flex-wrap:wrap;margin-top:7px;}
+.saved-item-tag{font-size:7px;letter-spacing:.08em;padding:2px 6px;border:1px solid var(--b);color:var(--td);text-transform:uppercase;font-family:'Noto Sans JP',sans-serif;}
+.saved-item-actions{display:flex;gap:5px;margin-top:9px;}
+.item-btn{font-size:7px;letter-spacing:.1em;padding:4px 9px;border:1px solid var(--b);color:var(--tm);cursor:pointer;background:none;font-family:'Noto Sans JP',sans-serif;text-transform:uppercase;transition:all .2s;}
+.item-btn.dl{border-color:var(--gold);color:var(--gold);}
+
+.actions{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--b);padding:12px 20px;display:flex;gap:8px;z-index:10;}
+.btn-save{flex:1;font-family:'Noto Sans JP',sans-serif;font-size:8px;letter-spacing:.2em;text-transform:uppercase;padding:11px;cursor:pointer;background:transparent;color:var(--tm);border:1px solid var(--b);transition:all .2s;}
+.btn-save:hover{border-color:var(--gold);color:var(--gold);}
+.btn-dl{flex:2;font-family:'Noto Sans JP',sans-serif;font-size:8px;letter-spacing:.2em;text-transform:uppercase;padding:11px;cursor:pointer;background:var(--gold);color:#fff;border:none;transition:opacity .2s;}
+.btn-dl:disabled{opacity:.4;cursor:not-allowed;}
+
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--s1);border:1px solid var(--gold);padding:8px 16px;font-size:10px;letter-spacing:.07em;color:var(--gold);opacity:0;transition:all .3s;z-index:9999;white-space:nowrap;pointer-events:none;font-family:'Noto Sans JP',sans-serif;}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.empty{padding:28px;text-align:center;}
+.empty-icon{font-family:'Noto Serif JP',serif;font-size:28px;color:var(--b);margin-bottom:6px;}
+.empty-text{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--td);font-family:'Noto Sans JP',sans-serif;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-logo">VUELTA</div>
+      <div class="hdr-sub">Palabra</div>
+    </div>
+    <div class="hdr-date" id="hdrDate"></div>
+  </div>
+  <div class="concept">
+    <div class="concept-text">カクテルは、きっかけに過ぎない。本当に大事なのは、<span>その先に生まれる会話と、隣にいる人と、予定していなかったいい夜</span>です。</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="field">
+    <input type="text" class="title-input" id="noteTitle" placeholder="Title">
+  </div>
+
+  <div class="field">
+    <label class="field-label">Palabra</label>
+    <textarea class="note-area" id="noteBody" placeholder="Write your words..."></textarea>
+    <div class="char-count" id="charCount">0 文字</div>
+  </div>
+
+  <div class="field">
+    <div class="tags-header">
+      <label class="field-label" style="margin:0;">Tags</label>
+      <button class="auto-tag-btn" id="autoTagBtn" onclick="autoGenerateTags()" disabled>
+        <span id="autoTagIcon">◇</span> Auto Tag
+      </button>
+    </div>
+    <div class="tags-wrap" id="tagsWrap">
+      <div class="tag" onclick="toggleTag(this)">思考</div>
+      <div class="tag" onclick="toggleTag(this)">価値観</div>
+      <div class="tag" onclick="toggleTag(this)">夜</div>
+      <div class="tag" onclick="toggleTag(this)">広島</div>
+      <div class="tag" onclick="toggleTag(this)">VUELTA</div>
+      <div class="tag" onclick="toggleTag(this)">経営</div>
+      <div class="tag" onclick="toggleTag(this)">ファッション</div>
+      <div class="tag" onclick="toggleTag(this)">問い</div>
+      <div class="tag" onclick="toggleTag(this)">日常</div>
+      <div class="tag" onclick="toggleTag(this)">言葉</div>
+      <div class="tag" onclick="toggleTag(this)">人</div>
+      <div class="tag" onclick="toggleTag(this)">関係性</div>
+      <div class="tag" onclick="toggleTag(this)">体験</div>
+      <div class="tag" onclick="toggleTag(this)">本質</div>
+      <div class="tag" onclick="toggleTag(this)">余白</div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Mood</label>
+    <div class="mood-wrap">
+      <div class="mood" onclick="toggleMood(this)">静か</div>
+      <div class="mood" onclick="toggleMood(this)">高揚</div>
+      <div class="mood" onclick="toggleMood(this)">問い</div>
+      <div class="mood" onclick="toggleMood(this)">余白</div>
+      <div class="mood" onclick="toggleMood(this)">深夜</div>
+      <div class="mood" onclick="toggleMood(this)">雨</div>
+    </div>
+  </div>
+</div>
+
+<div class="saved-section">
+  <div class="saved-title">Saved Words</div>
+  <div id="savedList"></div>
+</div>
+
+<div class="actions">
+  <button class="btn-save" onclick="saveNote()">Save</button>
+  <button class="btn-dl" id="dlBtn" onclick="downloadMd()" disabled>Export to Obsidian (.md)</button>
+</div>
+
+<div class="toast" id="toastEl"></div>
+
+<script>
+var KEY = 'vuelta_notes_v3';
+var notes = [];
+var currentMood = '';
+
+function loadNotes() {
+  try {
+    var s = localStorage.getItem(KEY);
+    if (s) notes = JSON.parse(s);
+    if (!Array.isArray(notes)) notes = [];
+  } catch(e) { notes = []; }
+}
+
+function saveNotes() {
+  try { localStorage.setItem(KEY, JSON.stringify(notes)); } catch(e) {}
+}
+
+function todayStr() {
+  var n = new Date();
+  return n.getFullYear() + '/' + String(n.getMonth()+1).padStart(2,'0') + '/' + String(n.getDate()).padStart(2,'0');
+}
+
+function todayKey() {
+  var n = new Date();
+  return n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0') + '-' + String(n.getDate()).padStart(2,'0');
+}
+
+function nowStr() {
+  var n = new Date();
+  return n.getFullYear() + ' / ' + String(n.getMonth()+1).padStart(2,'0') + ' / ' + String(n.getDate()).padStart(2,'0') + '　' + String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+}
+
+function getTitle() { return document.getElementById('noteTitle').value.trim() || 'Untitled'; }
+function getBody() { return document.getElementById('noteBody').value.trim(); }
+
+function getSelectedTags() {
+  var tags = document.querySelectorAll('.tag.on');
+  var result = [];
+  var i;
+  for (i = 0; i < tags.length; i++) result.push(tags[i].textContent.trim());
+  return result;
+}
+
+function toggleTag(el) { el.classList.toggle('on'); }
+
+function toggleMood(el) {
+  var moods = document.querySelectorAll('.mood');
+  var i;
+  for (i = 0; i < moods.length; i++) moods[i].classList.remove('on');
+  el.classList.add('on');
+  currentMood = el.textContent.trim();
+}
+
+document.getElementById('noteBody').addEventListener('input', function() {
+  var len = this.value.length;
+  document.getElementById('charCount').textContent = len + ' 文字';
+  document.getElementById('dlBtn').disabled = len === 0;
+  document.getElementById('autoTagBtn').disabled = len < 10;
+});
+
+async function autoGenerateTags() {
+  var body = getBody();
+  if (!body || body.length < 10) { toast('もう少し文章を書いてください'); return; }
+
+  var btn = document.getElementById('autoTagBtn');
+  var icon = document.getElementById('autoTagIcon');
+  btn.disabled = true;
+  icon.className = 'spin';
+  icon.textContent = '◎';
+  toast('AIがタグを生成中...');
+
+  try {
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: '以下の日本語の思考・メモに対して、Obsidianで使えるタグを日本語で20個以上できるだけ多く生成してください。\n\n内容：\n' + body + '\n\n要件：\n- タグは短い単語やフレーズ\n- 内容に関連するキーワードを幅広く抽出\n- 感情、テーマ、場所、人物、概念、時間帯なども含める\n- JSONの配列形式のみで返答してください\n- 余分な説明は不要。配列のみ。'
+        }]
+      })
+    });
+
+    var data = await response.json();
+    var text = '';
+    var i;
+    for (i = 0; i < data.content.length; i++) {
+      if (data.content[i].type === 'text') { text += data.content[i].text; break; }
+    }
+
+    var match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('parse error');
+    var generatedTags = JSON.parse(match[0]);
+
+    var wrap = document.getElementById('tagsWrap');
+    var existingTags = [];
+    var existing = wrap.querySelectorAll('.tag');
+    for (i = 0; i < existing.length; i++) existingTags.push(existing[i].textContent.trim());
+
+    for (i = 0; i < generatedTags.length; i++) {
+      var tagText = generatedTags[i].toString().trim();
+      if (!tagText) continue;
+      var found = false;
+      var j;
+      for (j = 0; j < existingTags.length; j++) {
+        if (existingTags[j] === tagText) {
+          found = true;
+          existing[j].classList.add('on');
+          break;
+        }
+      }
+      if (!found) {
+        var el = document.createElement('div');
+        el.className = 'tag auto on';
+        el.textContent = tagText;
+        el.onclick = function() { toggleTag(this); };
+        wrap.appendChild(el);
+        existingTags.push(tagText);
+      }
+    }
+    toast(generatedTags.length + ' 個のタグを生成しました');
+
+  } catch(e) {
+    toast('タグ生成に失敗しました');
+  } finally {
+    btn.disabled = false;
+    icon.className = '';
+    icon.textContent = '◇';
+  }
+}
+
+function saveNote() {
+  var body = getBody();
+  if (!body) { toast('内容を入力してください'); return; }
+  var now = new Date();
+  document.getElementById('hdrDate').textContent = nowStr();
+  var note = {
+    id: now.getTime(),
+    date: todayStr(),
+    dateKey: todayKey(),
+    time: String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0'),
+    title: getTitle(),
+    body: body,
+    tags: getSelectedTags(),
+    mood: currentMood,
+    savedAt: now.toISOString()
+  };
+  notes.unshift(note);
+  saveNotes();
+  renderSaved();
+  toast('保存しました');
+}
+
+function buildMd(note) {
+  var md = '---\n';
+  md += 'title: ' + note.title + '\n';
+  md += 'created: ' + note.date + '\n';
+  if (note.time) md += 'time: ' + note.time + '\n';
+  if (note.tags && note.tags.length) md += 'tags: ' + note.tags.join(', ') + '\n';
+  if (note.mood) md += 'mood: ' + note.mood + '\n';
+  md += '---\n\n';
+  md += '# ' + note.title + '\n\n';
+  md += note.body + '\n';
+  return md;
+}
+
+function downloadFile(md, filename) {
+  var blob = new Blob([md], {type: 'text/markdown'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function downloadMd() {
+  var body = getBody();
+  if (!body) { toast('内容を入力してください'); return; }
+  var now = new Date();
+  var note = {
+    id: now.getTime(),
+    date: todayStr(),
+    dateKey: todayKey(),
+    time: String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0'),
+    title: getTitle(),
+    body: body,
+    tags: getSelectedTags(),
+    mood: currentMood
+  };
+  var filename = note.dateKey + '_' + note.title.replace(/\s/g, '_') + '.md';
+  downloadFile(buildMd(note), filename);
+  saveNote();
+  toast('Obsidian用ファイルをExportしました');
+}
+
+function downloadSingleMd(id) {
+  var note = null;
+  var i;
+  for (i = 0; i < notes.length; i++) {
+    if (notes[i].id === id) { note = notes[i]; break; }
+  }
+  if (!note) return;
+  var filename = note.dateKey + '_' + note.title.replace(/\s/g, '_') + '.md';
+  downloadFile(buildMd(note), filename);
+  toast('Export しました');
+}
+
+function deleteNote(id) {
+  notes = notes.filter(function(n) { return n.id !== id; });
+  saveNotes();
+  renderSaved();
+  toast('削除しました');
+}
+
+function loadNote(id) {
+  var note = null;
+  var i;
+  for (i = 0; i < notes.length; i++) {
+    if (notes[i].id === id) { note = notes[i]; break; }
+  }
+  if (!note) return;
+  document.getElementById('noteTitle').value = note.title === 'Untitled' ? '' : note.title;
+  document.getElementById('noteBody').value = note.body;
+  document.getElementById('charCount').textContent = note.body.length + ' 文字';
+  document.getElementById('dlBtn').disabled = false;
+  document.getElementById('autoTagBtn').disabled = note.body.length < 10;
+
+  var tags = document.querySelectorAll('.tag');
+  var j;
+  for (j = 0; j < tags.length; j++) {
+    tags[j].classList.remove('on');
+    if (note.tags && note.tags.indexOf(tags[j].textContent.trim()) >= 0) tags[j].classList.add('on');
+  }
+  var moods = document.querySelectorAll('.mood');
+  for (j = 0; j < moods.length; j++) {
+    moods[j].classList.remove('on');
+    if (note.mood && moods[j].textContent.trim() === note.mood) {
+      moods[j].classList.add('on');
+      currentMood = note.mood;
+    }
+  }
+  window.scrollTo(0, 0);
+  toast('読み込みました');
+}
+
+function renderSaved() {
+  var el = document.getElementById('savedList');
+  if (!notes.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">◇</div><div class="empty-text">No words saved yet</div></div>';
+    return;
+  }
+  var html = '';
+  var i;
+  for (i = 0; i < notes.length; i++) {
+    var n = notes[i];
+    var preview = n.body.length > 55 ? n.body.slice(0, 55) + '…' : n.body;
+    var tagHtml = '';
+    if (n.tags && n.tags.length) {
+      var j;
+      for (j = 0; j < n.tags.length; j++) tagHtml += '<div class="saved-item-tag">' + n.tags[j] + '</div>';
+    }
+    if (n.mood) tagHtml += '<div class="saved-item-tag">' + n.mood + '</div>';
+    var timeStr = n.date + (n.time ? '  ' + n.time : '');
+    html += '<div class="saved-item">';
+    html += '<div class="saved-item-meta"><span>' + timeStr + '</span></div>';
+    html += '<div class="saved-item-title">' + n.title + '</div>';
+    html += '<div class="saved-item-preview">' + preview + '</div>';
+    if (tagHtml) html += '<div class="saved-item-tags">' + tagHtml + '</div>';
+    html += '<div class="saved-item-actions">';
+    html += '<button class="item-btn dl" onclick="downloadSingleMd(' + n.id + ')">Export</button>';
+    html += '<button class="item-btn" onclick="loadNote(' + n.id + ')">Edit</button>';
+    html += '<button class="item-btn" onclick="deleteNote(' + n.id + ')">Delete</button>';
+    html += '</div></div>';
+  }
+  el.innerHTML = html;
+}
+
+function toast(msg) {
+  var el = document.getElementById('toastEl');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(el._t);
+  el._t = setTimeout(function() { el.classList.remove('on'); }, 2800);
+}
+
+loadNotes();
+renderSaved();
+</script>
+</body>
+</html>
